@@ -12,8 +12,6 @@ print_battery_percentage() {
 		cat "$battery"
 	elif command_exists "pmset"; then
 		pmset -g batt | grep -o "[0-9]\{1,3\}%"
-	elif command_exists "acpi"; then
-		acpi -b | grep -m 1 -Eo "[0-9]+%"
 	elif command_exists "upower"; then
         # use DisplayDevice if available otherwise battery
 		local battery=$(upower -e | grep -E 'battery|DisplayDevice'| tail -n1)
@@ -32,6 +30,8 @@ print_battery_percentage() {
 		if [ -n "$energy" ] && [ -n "$energy_full" ]; then
 			echo $energy $energy_full | awk '{printf("%d%%", ($1/$2)*100)}'
 		fi
+	elif command_exists "acpi"; then
+		acpi -b | grep -m 1 -Eo "[0-9]+%"
 	elif command_exists "termux-battery-status"; then
 		termux-battery-status | jq -r '.percentage' | awk '{printf("%d%%", $1)}'
 	elif command_exists "apm"; then

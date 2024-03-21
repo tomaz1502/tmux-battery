@@ -118,10 +118,10 @@ print_battery_remain() {
 		echo "?"	# currently unsupported on WSL
 	elif command_exists "pmset"; then
 		pmset_battery_remaining_time
-	elif command_exists "acpi"; then
-		acpi_battery_remaining_time
 	elif command_exists "upower"; then
 		upower_battery_remaining_time
+	elif command_exists "acpi"; then
+		acpi_battery_remaining_time
 	elif command_exists "apm"; then
 		apm_battery_remaining_time
 	fi
