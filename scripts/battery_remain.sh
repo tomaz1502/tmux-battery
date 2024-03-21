@@ -110,7 +110,7 @@ acpi_battery_remaining_time() {
 	if ! $short; then
 		regex="$regex:[0-9]+"
 	fi
-	acpi -b | grep -m 1 -Eo "$regex"
+	acpi -b | tail -n 1 | grep -m 1 -Eo "$regex"
 }
 
 print_battery_remain() {
@@ -118,10 +118,10 @@ print_battery_remain() {
 		echo "?"	# currently unsupported on WSL
 	elif command_exists "pmset"; then
 		pmset_battery_remaining_time
-	elif command_exists "upower"; then
-		upower_battery_remaining_time
 	elif command_exists "acpi"; then
 		acpi_battery_remaining_time
+	elif command_exists "upower"; then
+		upower_battery_remaining_time
 	elif command_exists "apm"; then
 		apm_battery_remaining_time
 	fi

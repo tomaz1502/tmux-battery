@@ -43,12 +43,12 @@ battery_status() {
 		awk '{print tolower($0);}' "$battery"
 	elif command_exists "pmset"; then
 		pmset -g batt | awk -F '; *' 'NR==2 { print $2 }'
+	elif command_exists "acpi"; then
+		acpi -b | tail -n 1 | awk '{gsub(/,/, ""); print tolower($3); exit}'
 	elif command_exists "upower"; then
 		local battery
 		battery=$(upower -e | grep -E 'battery|DisplayDevice'| tail -n1)
 		upower -i $battery | awk '/state/ {print $2}'
-	elif command_exists "acpi"; then
-		acpi -b | awk '{gsub(/,/, ""); print tolower($3); exit}'
 	elif command_exists "termux-battery-status"; then
 		termux-battery-status | jq -r '.status' | awk '{printf("%s%", tolower($1))}'
 	elif command_exists "apm"; then
